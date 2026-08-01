@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome - Step 1</title>
+    <title>Key Checkpoint</title>
     <style>
         body {
             background-color: #121212;
             color: #ffffff;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -18,34 +18,151 @@
         }
         .container {
             text-align: center;
-            background: #1e1e1e;
+            background: #1a1a1a;
             padding: 40px;
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+            box-shadow: 0 0 15px rgba(255, 85, 0, 0.2);
+            width: 350px;
         }
-        button {
-            background-color: #ff5500;
+        h2 {
+            color: #ff5500;
+            text-shadow: 0 0 5px rgba(255, 85, 0, 0.5);
+            margin-top: 0;
+        }
+        .task-btn {
+            display: block;
+            width: 100%;
+            background-color: #2a2a2a;
             color: white;
-            border: none;
-            padding: 12px 24px;
+            border: 1px solid #ff5500;
+            padding: 12px 0;
             font-size: 16px;
             font-weight: bold;
             border-radius: 4px;
             cursor: pointer;
-            margin-top: 20px;
-            transition: background 0.2s;
+            margin: 15px 0;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px rgba(255, 85, 0, 0.1);
         }
-        button:hover {
+        .task-btn:hover {
+            background-color: #ff5500;
+            color: #121212;
+            box-shadow: 0 0 15px rgba(255, 85, 0, 0.6);
+        }
+        .task-btn.completed {
+            background-color: #333;
+            border-color: #555;
+            color: #888;
+            cursor: default;
+            box-shadow: none;
+            pointer-events: none;
+        }
+        #generate-btn {
+            background-color: #333;
+            color: #555;
+            border: none;
+            padding: 15px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: not-allowed;
+            margin-top: 20px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        #generate-btn.unlocked {
+            background-color: #ff5500;
+            color: #121212;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 85, 0, 0.8);
+        }
+        #generate-btn.unlocked:hover {
             background-color: #ff7733;
+        }
+        .status {
+            font-size: 14px;
+            color: #aaa;
+            margin-top: 15px;
+            min-height: 20px;
+            font-weight: bold;
+        }
+        .timer {
+            font-size: 24px;
+            color: #ff5500;
+            margin-top: 10px;
+            font-family: monospace;
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to the Hub Portal</h1>
-        <p>Click below to proceed to the next step.</p>
-        <!-- Button that takes you to the new page -->
-        <button onclick="window.location.href='page2.html'">Proceed to Next Page</button>
+        <h2>Key Verification</h2>
+        <p>Complete the tasks below to unlock your key.</p>
+        
+        <a href="https://www.youtube.com/@c00lk1ddck" target="_blank" class="task-btn" id="yt-btn" onclick="completeTask('yt')">Subscribe to YouTube</a>
+        <a href="https://discord.com/invite/P2TXsmxnRc" target="_blank" class="task-btn" id="dc-btn" onclick="completeTask('dc')">Join Discord Server</a>
+        
+        <div class="status" id="status-text">Awaiting task completion...</div>
+        <div class="timer" id="countdown-timer">60</div>
+
+        <button id="generate-btn" disabled onclick="window.location.href='page2.html'">Generate Key</button>
     </div>
+
+    <script>
+        let ytCompleted = false;
+        let dcCompleted = false;
+        let isChecking = false;
+
+        function completeTask(task) {
+            if (task === 'yt') {
+                const ytBtn = document.getElementById('yt-btn');
+                ytBtn.classList.add('completed');
+                ytBtn.innerText = "YouTube Opened";
+                ytCompleted = true;
+            }
+            if (task === 'dc') {
+                const dcBtn = document.getElementById('dc-btn');
+                dcBtn.classList.add('completed');
+                dcBtn.innerText = "Discord Opened";
+                dcCompleted = true;
+            }
+
+            // If both are clicked and we haven't started checking yet
+            if (ytCompleted && dcCompleted && !isChecking) {
+                isChecking = true;
+                startVerificationTimer();
+            }
+        }
+
+        function startVerificationTimer() {
+            let timeLeft = 60;
+            const statusText = document.getElementById('status-text');
+            const timerDisplay = document.getElementById('countdown-timer');
+            const generateBtn = document.getElementById('generate-btn');
+
+            statusText.innerText = "Verifying completion... Do not close this page.";
+            statusText.style.color = "#ff5500";
+            timerDisplay.style.display = "block";
+            timerDisplay.innerText = timeLeft;
+
+            const timer = setInterval(() => {
+                timeLeft--;
+                timerDisplay.innerText = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    statusText.innerText = "Verification complete! You may now generate your key.";
+                    statusText.style.color = "#00ff00"; // Turns green to signal success
+                    timerDisplay.style.display = "none";
+                    
+                    generateBtn.removeAttribute("disabled");
+                    generateBtn.classList.add('unlocked');
+                }
+            }, 1000); // 1000 milliseconds = 1 second
+        }
+    </script>
 </body>
 </html>
