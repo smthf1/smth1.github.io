@@ -166,13 +166,12 @@
         }
         animateSpace();
 
-        // Function to generate a random key
+        // Function to generate a random key using lowercase, uppercase, numbers, and symbols
         function generateRandomKey() {
-            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
             let key = "KEY-";
-            for (let i = 0; i < 16; i++) {
+            for (let i = 0; i < 20; i++) {
                 key += chars.charAt(Math.floor(Math.random() * chars.length));
-                if ((i + 1) % 4 === 0 && i < 15) key += "-";
             }
             return key;
         }
@@ -238,7 +237,6 @@
         }
 
         function showKeyStep() {
-            // Generate and assign the random key when reaching the final step
             document.getElementById("keyOutput").value = generateRandomKey();
             document.getElementById("step2").classList.remove("active");
             document.getElementById("step3").classList.add("active");
