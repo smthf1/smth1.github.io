@@ -3,253 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Key System</title>
+    <title>Welcome - Step 1</title>
     <style>
         body {
-            background-color: #000000;
+            background-color: #121212;
             color: #ffffff;
             font-family: Arial, sans-serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
             margin: 0;
-            overflow: hidden;
-            position: relative;
         }
-
-        /* Moving Space Background Canvas */
-        #spaceCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-
         .container {
-            background-color: rgba(30, 30, 30, 0.85);
-            backdrop-filter: blur(5px);
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
             text-align: center;
-            width: 350px;
-            z-index: 1;
-        }
-        h2 {
-            margin-bottom: 20px;
-            font-size: 22px;
+            background: #1e1e1e;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
         button {
-            width: 100%;
-            padding: 12px;
             background-color: #ff5500;
-            border: none;
-            border-radius: 4px;
             color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
             font-weight: bold;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 14px;
-            margin-top: 10px;
+            margin-top: 20px;
+            transition: background 0.2s;
         }
-        button:disabled {
-            background-color: #444;
-            color: #888;
-            cursor: not-allowed;
-        }
-        button:hover:not(:disabled) {
-            background-color: #ff7722;
-        }
-        .step-container {
-            display: none;
-        }
-        .active {
-            display: block;
-        }
-        .message {
-            margin-top: 15px;
-            font-size: 14px;
-            word-break: break-all;
+        button:hover {
+            background-color: #ff7733;
         }
     </style>
 </head>
 <body>
-
-    <!-- Live Moving Space Background -->
-    <canvas id="spaceCanvas"></canvas>
-
     <div class="container">
-        <!-- Step 1: YouTube -->
-        <div id="step1" class="step-container active">
-            <h2>Step 1 of 2</h2>
-            <p style="font-size: 13px; color: #aaa;">Subscribe to the YouTube channel to start the timer.</p>
-            
-            <button id="ytBtn" onclick="openYouTube()">1. Subscribe to YouTube</button>
-            <button id="timerBtn1" disabled style="margin-top: 10px;">Please wait 60s...</button>
-        </div>
-
-        <!-- Step 2: Discord -->
-        <div id="step2" class="step-container">
-            <h2>Step 2 of 2</h2>
-            <p style="font-size: 13px; color: #aaa;">Join the Discord server to start the timer.</p>
-            
-            <button id="dcBtn" onclick="openDiscord()">2. Join Discord Server</button>
-            <button id="timerBtn2" disabled style="margin-top: 10px;">Please wait 60s...</button>
-        </div>
-
-        <!-- Step 3: Key Display -->
-        <div id="step3" class="step-container">
-            <h2>Your Key Is Ready</h2>
-            <p style="font-size: 13px; color: #aaa;">Copy your generated key below:</p>
-            <input type="text" id="keyOutput" readonly style="width: 100%; padding: 10px; background-color: #2c2c2c; border: 1px solid #444; border-radius: 4px; color: #fff; text-align: center; box-sizing: border-box;">
-            <button onclick="copyKey()" style="background-color: #28a745;">Copy Key</button>
-            <div class="message" id="msg" style="color: #4BB543;"></div>
-        </div>
+        <h1>Welcome to the Hub Portal</h1>
+        <p>Click below to proceed to the next step.</p>
+        <!-- Button that takes you to the new page -->
+        <button onclick="window.location.href='page2.html'">Proceed to Next Page</button>
     </div>
-
-    <script>
-        // Space Background Animation Script
-        const canvas = document.getElementById("spaceCanvas");
-        const ctx = canvas.getContext("2d");
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener("resize", resizeCanvas);
-        resizeCanvas();
-
-        const stars = [];
-        const numStars = 500;
-
-        for (let i = 0; i < numStars; i++) {
-            stars.push({
-                x: Math.random() * canvas.width - canvas.width / 2,
-                y: Math.random() * canvas.height - canvas.height / 2,
-                z: Math.random() * canvas.width,
-                size: Math.random() * 1.5 + 0.5
-            });
-        }
-
-        function animateSpace() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            let centerX = canvas.width / 2;
-            let centerY = canvas.height / 2;
-
-            for (let i = 0; i < stars.length; i++) {
-                let star = stars[i];
-                star.z -= 0.8;
-
-                if (star.z <= 0) {
-                    star.z = canvas.width;
-                    star.x = Math.random() * canvas.width - centerX;
-                    star.y = Math.random() * canvas.height - centerY;
-                }
-
-                let k = 250 / star.z;
-                let px = star.x * k + centerX;
-                let py = star.y * k + centerY;
-
-                if (px >= 0 && px <= canvas.width && py >= 0 && py <= canvas.height) {
-                    let pSize = Math.max(1, star.size * k);
-                    ctx.fillStyle = "#ffffff";
-                    ctx.beginPath();
-                    ctx.arc(px, py, pSize, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-            requestAnimationFrame(animateSpace);
-        }
-        animateSpace();
-
-        // Function to generate a random key using lowercase, uppercase, numbers, and symbols
-        function generateRandomKey() {
-            const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
-            let key = "KEY-";
-            for (let i = 0; i < 20; i++) {
-                key += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return key;
-        }
-
-        // Key System Logic
-        let ytClicked = false;
-        let dcClicked = false;
-
-        function openYouTube() {
-            window.open("https://www.youtube.com/@c00lk1ddck", "_blank");
-            if (!ytClicked) {
-                ytClicked = true;
-                startTimer("timerBtn1", 60, () => {
-                    let ytBtn = document.getElementById("ytBtn");
-                    ytBtn.disabled = true;
-                    ytBtn.innerText = "Completed ✓";
-
-                    let btn = document.getElementById("timerBtn1");
-                    btn.innerText = "Continue to Step 2";
-                    btn.disabled = false;
-                    btn.style.backgroundColor = "#ff5500";
-                    btn.onclick = showStep2;
-                });
-            }
-        }
-
-        function openDiscord() {
-            window.open("https://discord.gg/P2TXsmxnRc", "_blank");
-            if (!dcClicked) {
-                dcClicked = true;
-                startTimer("timerBtn2", 60, () => {
-                    let dcBtn = document.getElementById("dcBtn");
-                    dcBtn.disabled = true;
-                    dcBtn.innerText = "Completed ✓";
-
-                    let btn = document.getElementById("timerBtn2");
-                    btn.innerText = "Get Key";
-                    btn.disabled = false;
-                    btn.style.backgroundColor = "#ff5500";
-                    btn.onclick = showKeyStep;
-                });
-            }
-        }
-
-        function startTimer(buttonId, duration, onComplete) {
-            let timeLeft = duration;
-            let timerButton = document.getElementById(buttonId);
-            
-            let countdown = setInterval(() => {
-                timeLeft--;
-                if (timeLeft > 0) {
-                    timerButton.innerText = `Wait ${timeLeft}s to unlock...`;
-                } else {
-                    clearInterval(countdown);
-                    onComplete();
-                }
-            }, 1000);
-        }
-
-        function showStep2() {
-            document.getElementById("step1").classList.remove("active");
-            document.getElementById("step2").classList.add("active");
-        }
-
-        function showKeyStep() {
-            document.getElementById("keyOutput").value = generateRandomKey();
-            document.getElementById("step2").classList.remove("active");
-            document.getElementById("step3").classList.add("active");
-        }
-
-        function copyKey() {
-            let keyInput = document.getElementById("keyOutput");
-            keyInput.select();
-            keyInput.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(keyInput.value);
-            document.getElementById("msg").innerText = "Key copied to clipboard!";
-        }
-    </script>
-
 </body>
 </html>
