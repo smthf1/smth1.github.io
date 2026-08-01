@@ -6,7 +6,12 @@
     <title>Key Generated</title>
     <style>
         body {
-            background-color: #121212;
+            /* Deep space background matching the first page */
+            background-color: #050505;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f41?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             color: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
@@ -18,34 +23,37 @@
         }
         .container {
             text-align: center;
-            background: #1a1a1a;
+            background: rgba(26, 26, 26, 0.85);
             padding: 40px;
             border-radius: 8px;
-            border: 1px solid #333;
-            box-shadow: 0 0 15px rgba(255, 85, 0, 0.2);
+            border: 1px solid #ff5500;
+            box-shadow: 0 0 20px rgba(255, 85, 0, 0.3);
             width: 350px;
+            backdrop-filter: blur(5px);
         }
         h2 {
-            color: #00ff00; /* Green to indicate success */
-            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+            color: #ff5500;
+            text-shadow: 0 0 10px rgba(255, 85, 0, 0.6);
             margin-top: 0;
+            letter-spacing: 1px;
         }
         p {
-            color: #b0b0b0;
+            color: #ccc;
             font-size: 15px;
             margin-bottom: 20px;
         }
         .key-box {
-            background: #111;
+            background: rgba(17, 17, 17, 0.9);
             padding: 15px;
             border: 1px solid #ff5500;
             font-family: monospace;
-            font-size: 24px;
+            font-size: 28px;
             margin: 20px 0;
             color: #ff5500;
-            letter-spacing: 2px;
+            letter-spacing: 4px;
             user-select: all;
-            box-shadow: 0 0 10px rgba(255, 85, 0, 0.2) inset;
+            box-shadow: 0 0 15px rgba(255, 85, 0, 0.3) inset;
+            min-height: 35px;
         }
         .copy-btn {
             background-color: #ff5500;
@@ -59,6 +67,7 @@
             width: 100%;
             transition: all 0.3s ease;
             box-shadow: 0 0 10px rgba(255, 85, 0, 0.4);
+            display: none; /* Hidden until key is generated */
         }
         .copy-btn:hover {
             background-color: #ff7733;
@@ -73,28 +82,58 @@
 </head>
 <body>
     <div class="container">
-        <h2>Access Granted</h2>
-        <p>Your verification was successful. Copy your key below and paste it into the script window.</p>
+        <h2 id="status-title">Generating Key...</h2>
+        <p id="status-desc">Establishing secure connection and building token.</p>
         
-        <!-- The key that matches your Lua script -->
-        <div class="key-box" id="key-text">smth1</div>
+        <div class="key-box" id="key-text">-----</div>
 
         <button class="copy-btn" id="copy-btn" onclick="copyKey()">Copy Key</button>
     </div>
 
     <script>
-        function copyKey() {
-            // Get the text from the key box
-            const keyText = document.getElementById("key-text").innerText;
+        // The final exact key that matches the Rayfield code
+        const finalKey = "smth1"; 
+        
+        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+        const keyElement = document.getElementById("key-text");
+        let iterations = 0;
+
+        // Scramble animation function
+        window.onload = () => {
+            // Fill the box with placeholder text of the same length to start
+            keyElement.innerText = "X".repeat(finalKey.length);
             
-            // Copy it to the clipboard
+            const interval = setInterval(() => {
+                keyElement.innerText = keyElement.innerText.split("")
+                    .map((letter, index) => {
+                        if(index < iterations) {
+                            return finalKey[index];
+                        }
+                        return characters[Math.floor(Math.random() * characters.length)];
+                    })
+                    .join("");
+                
+                // When finished decoding
+                if(iterations >= finalKey.length){
+                    clearInterval(interval);
+                    document.getElementById("status-title").innerText = "Access Granted";
+                    document.getElementById("status-title").style.color = "#00ff00";
+                    document.getElementById("status-title").style.textShadow = "0 0 10px rgba(0, 255, 0, 0.5)";
+                    document.getElementById("status-desc").innerText = "Your key has been successfully generated.";
+                    document.getElementById("copy-btn").style.display = "block";
+                }
+                
+                iterations += 1/5; // Controls the speed of the decoding effect
+            }, 50);
+        };
+
+        function copyKey() {
+            const keyText = document.getElementById("key-text").innerText;
             navigator.clipboard.writeText(keyText).then(() => {
-                // Change the button to show it worked
                 const btn = document.getElementById("copy-btn");
                 btn.innerText = "Copied to Clipboard!";
                 btn.classList.add("success");
                 
-                // Reset the button after 3 seconds
                 setTimeout(() => {
                     btn.innerText = "Copy Key";
                     btn.classList.remove("success");
