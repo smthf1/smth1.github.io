@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Destination - Step 2</title>
+    <title>Key Generated</title>
     <style>
         body {
             background-color: #121212;
             color: #ffffff;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -18,42 +18,92 @@
         }
         .container {
             text-align: center;
-            background: #1e1e1e;
+            background: #1a1a1a;
             padding: 40px;
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+            box-shadow: 0 0 15px rgba(255, 85, 0, 0.2);
+            width: 350px;
+        }
+        h2 {
+            color: #00ff00; /* Green to indicate success */
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+            margin-top: 0;
+        }
+        p {
+            color: #b0b0b0;
+            font-size: 15px;
+            margin-bottom: 20px;
         }
         .key-box {
-            background: #2a2a2a;
+            background: #111;
             padding: 15px;
             border: 1px solid #ff5500;
             font-family: monospace;
-            font-size: 18px;
+            font-size: 24px;
             margin: 20px 0;
-            color: #ff7733;
+            color: #ff5500;
+            letter-spacing: 2px;
+            user-select: all;
+            box-shadow: 0 0 10px rgba(255, 85, 0, 0.2) inset;
         }
-        button {
-            background-color: #333;
-            color: white;
-            border: 1px solid #555;
-            padding: 10px 20px;
-            font-size: 14px;
+        .copy-btn {
+            background-color: #ff5500;
+            color: #121212;
+            border: none;
+            padding: 15px 24px;
+            font-size: 16px;
+            font-weight: bold;
             border-radius: 4px;
             cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 85, 0, 0.4);
         }
-        button:hover {
-            background-color: #444;
+        .copy-btn:hover {
+            background-color: #ff7733;
+            box-shadow: 0 0 15px rgba(255, 85, 0, 0.8);
+        }
+        .copy-btn.success {
+            background-color: #00ff00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.6);
+            color: #121212;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>You Have Arrived!</h1>
-        <p>Here is your generated key or content for the script:</p>
+        <h2>Access Granted</h2>
+        <p>Your verification was successful. Copy your key below and paste it into the script window.</p>
         
-        <div class="key-box">smth1</div>
+        <!-- The key that matches your Lua script -->
+        <div class="key-box" id="key-text">smth1</div>
 
-        <button onclick="window.location.href='index.html'">Go Back</button>
+        <button class="copy-btn" id="copy-btn" onclick="copyKey()">Copy Key</button>
     </div>
+
+    <script>
+        function copyKey() {
+            // Get the text from the key box
+            const keyText = document.getElementById("key-text").innerText;
+            
+            // Copy it to the clipboard
+            navigator.clipboard.writeText(keyText).then(() => {
+                // Change the button to show it worked
+                const btn = document.getElementById("copy-btn");
+                btn.innerText = "Copied to Clipboard!";
+                btn.classList.add("success");
+                
+                // Reset the button after 3 seconds
+                setTimeout(() => {
+                    btn.innerText = "Copy Key";
+                    btn.classList.remove("success");
+                }, 3000);
+            }).catch(err => {
+                console.error("Failed to copy text: ", err);
+                alert("Failed to copy key. Please select and copy it manually.");
+            });
+        }
+    </script>
 </body>
 </html>
