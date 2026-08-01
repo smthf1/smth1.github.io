@@ -6,7 +6,6 @@
     <title>Key Generated</title>
     <style>
         body {
-            /* Deep space background matching the first page */
             background-color: #050505;
             background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f41?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
             background-size: cover;
@@ -67,7 +66,7 @@
             width: 100%;
             transition: all 0.3s ease;
             box-shadow: 0 0 10px rgba(255, 85, 0, 0.4);
-            display: none; /* Hidden until key is generated */
+            display: none; 
         }
         .copy-btn:hover {
             background-color: #ff7733;
@@ -85,22 +84,33 @@
         <h2 id="status-title">Generating Key...</h2>
         <p id="status-desc">Establishing secure connection and building token.</p>
         
-        <div class="key-box" id="key-text">-----</div>
+        <div class="key-box" id="key-text">-----------</div>
 
         <button class="copy-btn" id="copy-btn" onclick="copyKey()">Copy Key</button>
     </div>
 
     <script>
-        // The final exact key that matches the Rayfield code
-        const finalKey = "smth1"; 
-        
-        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+        // Generate the dynamic daily key
+        function getDailyKey() {
+            const date = new Date();
+            // Use UTC to prevent timezone mismatches between the browser and Roblox servers
+            const year = date.getUTCFullYear();
+            const month = date.getUTCMonth() + 1; 
+            const day = date.getUTCDate();
+            
+            // Create a scrambled math seed based on today's date
+            const seed = (year * month * day * 7391) % 999999;
+            
+            // Format it to always be 6 digits, e.g., "KICK-049281"
+            return "KICK-" + seed.toString().padStart(6, '0');
+        }
+
+        const finalKey = getDailyKey();
+        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
         const keyElement = document.getElementById("key-text");
         let iterations = 0;
 
-        // Scramble animation function
         window.onload = () => {
-            // Fill the box with placeholder text of the same length to start
             keyElement.innerText = "X".repeat(finalKey.length);
             
             const interval = setInterval(() => {
@@ -113,17 +123,16 @@
                     })
                     .join("");
                 
-                // When finished decoding
                 if(iterations >= finalKey.length){
                     clearInterval(interval);
                     document.getElementById("status-title").innerText = "Access Granted";
                     document.getElementById("status-title").style.color = "#00ff00";
                     document.getElementById("status-title").style.textShadow = "0 0 10px rgba(0, 255, 0, 0.5)";
-                    document.getElementById("status-desc").innerText = "Your key has been successfully generated.";
+                    document.getElementById("status-desc").innerText = "Your key expires in 24 hours.";
                     document.getElementById("copy-btn").style.display = "block";
                 }
                 
-                iterations += 1/5; // Controls the speed of the decoding effect
+                iterations += 1/4; 
             }, 50);
         };
 
@@ -140,7 +149,7 @@
                 }, 3000);
             }).catch(err => {
                 console.error("Failed to copy text: ", err);
-                alert("Failed to copy key. Please select and copy it manually.");
+                alert("Failed to copy key.");
             });
         }
     </script>
