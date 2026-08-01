@@ -84,7 +84,7 @@
         <!-- Step 1: YouTube -->
         <div id="step1" class="step-container active">
             <h2>Step 1 of 2</h2>
-            <p style="font-size: 13px; color: #aaa;">Subscribe to the YouTube channel to proceed.</p>
+            <p style="font-size: 13px; color: #aaa;">Subscribe to the YouTube channel to start the timer.</p>
             
             <button id="ytBtn" onclick="openYouTube()">1. Subscribe to YouTube</button>
             <button id="timerBtn1" disabled style="margin-top: 10px;">Please wait 60s...</button>
@@ -93,7 +93,7 @@
         <!-- Step 2: Discord -->
         <div id="step2" class="step-container">
             <h2>Step 2 of 2</h2>
-            <p style="font-size: 13px; color: #aaa;">Join the Discord server to unlock your key.</p>
+            <p style="font-size: 13px; color: #aaa;">Join the Discord server to start the timer.</p>
             
             <button id="dcBtn" onclick="openDiscord()">2. Join Discord Server</button>
             <button id="timerBtn2" disabled style="margin-top: 10px;">Please wait 60s...</button>
@@ -103,7 +103,7 @@
         <div id="step3" class="step-container">
             <h2>Your Key Is Ready</h2>
             <p style="font-size: 13px; color: #aaa;">Copy your generated key below:</p>
-            <input type="text" id="keyOutput" readonly style="width: 100%; padding: 10px; background-color: #2c2c2c; border: 1px solid #444; border-radius: 4px; color: #fff; text-align: center; box-sizing: border-box;" value="FREE-KEY-c00lk1dd-9921">
+            <input type="text" id="keyOutput" readonly style="width: 100%; padding: 10px; background-color: #2c2c2c; border: 1px solid #444; border-radius: 4px; color: #fff; text-align: center; box-sizing: border-box;">
             <button onclick="copyKey()" style="background-color: #28a745;">Copy Key</button>
             <div class="message" id="msg" style="color: #4BB543;"></div>
         </div>
@@ -142,7 +142,7 @@
 
             for (let i = 0; i < stars.length; i++) {
                 let star = stars[i];
-                star.z -= 0.8; // Speed of movement coming toward the screen
+                star.z -= 0.8;
 
                 if (star.z <= 0) {
                     star.z = canvas.width;
@@ -166,6 +166,17 @@
         }
         animateSpace();
 
+        // Function to generate a random key
+        function generateRandomKey() {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            let key = "KEY-";
+            for (let i = 0; i < 16; i++) {
+                key += chars.charAt(Math.floor(Math.random() * chars.length));
+                if ((i + 1) % 4 === 0 && i < 15) key += "-";
+            }
+            return key;
+        }
+
         // Key System Logic
         let ytClicked = false;
         let dcClicked = false;
@@ -174,9 +185,11 @@
             window.open("https://www.youtube.com/@c00lk1ddck", "_blank");
             if (!ytClicked) {
                 ytClicked = true;
-                document.getElementById("ytBtn").disabled = true;
-                document.getElementById("ytBtn").innerText = "Completed ✓";
                 startTimer("timerBtn1", 60, () => {
+                    let ytBtn = document.getElementById("ytBtn");
+                    ytBtn.disabled = true;
+                    ytBtn.innerText = "Completed ✓";
+
                     let btn = document.getElementById("timerBtn1");
                     btn.innerText = "Continue to Step 2";
                     btn.disabled = false;
@@ -190,9 +203,11 @@
             window.open("https://discord.gg/P2TXsmxnRc", "_blank");
             if (!dcClicked) {
                 dcClicked = true;
-                document.getElementById("dcBtn").disabled = true;
-                document.getElementById("dcBtn").innerText = "Completed ✓";
                 startTimer("timerBtn2", 60, () => {
+                    let dcBtn = document.getElementById("dcBtn");
+                    dcBtn.disabled = true;
+                    dcBtn.innerText = "Completed ✓";
+
                     let btn = document.getElementById("timerBtn2");
                     btn.innerText = "Get Key";
                     btn.disabled = false;
@@ -223,6 +238,8 @@
         }
 
         function showKeyStep() {
+            // Generate and assign the random key when reaching the final step
+            document.getElementById("keyOutput").value = generateRandomKey();
             document.getElementById("step2").classList.remove("active");
             document.getElementById("step3").classList.add("active");
         }
